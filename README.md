@@ -79,12 +79,12 @@ This repository contains six advanced control projects, where the following topi
 * Sampled Control System
 * Small Gain Theorem and Anti-Windup
 
-The Matlab and Simulink project codes of the six projects are available in the folder [(Codes)](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Codes) and the two articles explaining with details the project as well as the discussion are available in the folder [Articles](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Articles)
+The Matlab and Simulink project codes of the six projects are available in the folder [Codes](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Codes) and the two articles explaining with details the project as well as the discussion are available in the folder [Articles](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Articles)
 
 
 
 <p float="left">
-  <img src="images/img1.JPG" width="500" height="450" />
+  <img src="images/img1.JPG" width="400" height="350" />
 <!--   <img src="images/img2.jpg" width="500" height="300" /> -->
 </p>
 
