@@ -1,0 +1,288 @@
+%clc
+%clear all
+%close all
+
+%% Define caso (0 - nominal, 1 -caso incerto)
+flag=0;
+
+% Variável complexa s (função de transferência)
+s=tf([1 0],1);
+
+%% Sistema simulado
+P=tf([-0.2 2],[1 2 1]);                       % Processo contínuo
+L=0.0; % atraso
+
+%% Modelo nominal para fins de projeto
+Pn=P;
+Ln=0; % atraso
+
+
+
+%% Tempo total de simulação 
+tsim=60; % Tempo de simulação
+
+%% Tempo de alteração da
+tset=0;  % Instante de alteração da referência
+
+%% Define tipo de perturbação (0 - degrau, 1-rampa, 2 senoide)
+
+tipo_u=0;   % tipo de perturbação da entrada
+tipo_y=0;   % tipo de perturbação da saída
+
+tpu=40;     % Intante inicial da perturbação da entrada
+du=inf;      % Intervalo de duração da perturbação da entrada
+Apu=0.2;   % Amplitude da perturbação da entrada
+
+tpy=20;     % Intante inicial da perturbação da saída
+dy=inf;       % Duração da perturbação da saída
+Apy=0.2;    % Amplitude da perturbação da entrada
+
+omega_u=2;  % Frequêcia da perturação da entrada (apenas para tipo 2)
+omega_y=2;  % Frequêcia da perturação da saída   (apenas para o tipo 2)
+
+%% Controlador 
+
+Ts=ta;                                    % Período de amostragem
+Pd=c2d(P,Ts,'zoh');                       % Modelo discretizado
+
+
+
+C=Cz
+F=Fz;
+
+Hmf=minreal(feedback(C*Pd,1));
+
+
+
+
+Rp = denCz;
+Sp = numCz;
+Tp = numFz;
+
+% Torna o polinômio R(z) mônico
+
+Rp=Rp/Rp(1);
+Sp=Sp/Rp(1);
+Tp=Tp/Rp(1);
+
+% Polinômio modificado para considerar controles passados
+Rm=Rp(2:size(Rp,2));
+
+
+nr=size(Rp,2)-1;
+ns=size(Sp,2);
+nt=size(Tp,2);
+
+
+
+%% Define passo de integração e passo de armazenamonto 
+dT=Ts;     % passo de amostragem 
+h=Ts/100;  % passo de integração
+
+
+%%----------------- finaliza definição de parâmetros ------------------------
+
+
+if flag==0
+  P=Pn;
+  L=Ln;
+end
+
+% Representação em espaço de estados (acelera a simulação)
+ssP=ss(P); Ap=ssP.a; Bp=ssP.b; Cp=ssP.c; Dp=ssP.d;
+ssPn=ss(Pn); Apn=ssPn.a; Bpn=ssPn.b; Cpn=ssPn.c; Dpn=ssPn.d;
+
+
+% Arredonda o passo de integração tal que dT seja múltiplo de h
+m=ceil(dT/h);
+h=dT/m;
+
+% Atraso de tempo discretro
+Ld=round(L/h);
+U_atraso=zeros(1,Ld+1);
+
+U_passado=zeros(1,nr);
+Yr_passado=zeros(1,nt);
+Y_passado=zeros(1,ns);
+
+display('Atraso múltiplo do passo - atraso considerado:')
+display(Ld*h)
+
+% Calcula número de passos de simulação
+kfinal=ceil(tsim/dT);
+
+% Estabelece condições iniciais dos elementos dinâmicos
+xp0=zeros(size(Ap,1),1);
+
+% Simula sistema de controle
+ 
+for k=1:kfinal
+  
+   t(k)=(k-1)*dT;  % marca o tempo  
+
+   % Estabelece as condições iniciais (apenas no primeiro passo)
+   
+   if k==1
+    
+    xp=xp0;   % condição inicial do processo
+    y=Cp*xp0;  % condição inicial da saída  (assumindo Dp=0)  
+    
+ 
+   end
+ 
+
+ % Define mudança de referência
+  if k<tset/dT+1
+    r(k)=0;
+  else
+    r(k)=1; 
+  end
+ 
+  
+
+ % Define perturbação na entrada do processo
+  if k<=tpu/dT-1   
+      qu=0;
+  elseif k>tpu/dT&& k<= (tpu+du)/dT -1
+      
+         if  tipo_u==0           
+                  qu=Apu;
+         elseif tipo_u==1
+                  qu=qu+Apu*dT;
+         else
+                  qu=sin(omega_u*k*dT);
+         end
+  else
+         if tipo_u~=1 
+             qu=0;
+          end 
+            
+  end
+    
+    
+ % Define perturbação na saída do processo
+  if k<=tpy/dT-1   
+      qy=0;
+  elseif k>tpy/dT&& k<= (tpy+dy)/dT -1
+      
+         if  tipo_y==0           
+                  qy=Apy;
+         elseif tipo_y==1
+                  qy=qy+Apy*dT;
+         else
+                  qy=sin(omega_y*k*dT);
+         end
+  else  
+         
+          if tipo_y~=1 
+             qy=0;
+          end 
+  end    
+  
+  
+   Yr_passado=[r(k) Yr_passado(1:nt-1)];
+   
+   % R(q^-1)u(k)=T(q^-1)y_r(k)-S(q^-1)y(k)
+    u=-Rm*U_passado'+Tp*Yr_passado'-Sp*Y_passado';
+  
+   for l=1:m
+        
+      
+     %Calcula sinal de controle
+     
+   
+     
+  
+     
+     %Calcula saída do processo
+     U_atraso=[u U_atraso(1:Ld)];
+     u_atraso=U_atraso(Ld+1);
+     
+   % [y_aux,xp]=sim_euler(Ap,Bp,Cp,Dp,xp,h,uatraso+qu);   
+     xp=h*Ap*xp+xp+h*Bp*(u_atraso+qu);
+     y_aux=Cp*xp+Dp*(u_atraso+qu);
+     y=y_aux+qy;
+     
+    
+     
+     % Armazena valores calculados
+     if l==1
+       
+       Xp(:,k)=xp;   
+         
+       U(k)=u_atraso;
+       Y(k)=y;
+       Qy(k)=qy;
+       Qu(k)=qu;
+    
+    end
+       
+       
+   end
+   
+     Y_passado=[y Y_passado(1:ns-1)];
+     U_passado=[u U_passado(1:nr-1)];
+   
+end
+
+
+nfont=15;   % define tamanho da fonte de texto
+nlinha=3;   % define espessura da linha
+
+figure(1)
+
+subplot(2,1,1)
+plot(t,r,'--r','linewidth',nlinha-0.5)
+hold on
+plot(t,Y,'b','linewidth',nlinha)
+grid on
+axis([0 t(end) min(Y)-0.2  max(Y)+0.2])
+set(gca,'fontsize',nfont)
+
+% Define as entradas de texto e ajusta o tamanho da fonte
+hx=xlabel('Tempo (s)');
+hy=ylabel('Saída');
+%hl=legend('r(t)', 'y(t)');
+%set(hl,'fontsize',nfont)
+%set(hl,'location','southeast')
+set(hx,'fontsize',nfont)
+set(hy,'fontsize',nfont)
+
+subplot(2,1,2)
+plot(t,U,'b','linewidth',nlinha)
+grid on
+axis([0 t(end) min(U)-0.2 max(U)+0.2])
+set(gca,'fontsize',nfont)
+
+% Define as entradas de texto e ajusta o tamanho da fonte
+hx=xlabel('Tempo (s)');
+hy=ylabel('Controle');
+set(hx,'fontsize',nfont)
+set(hy,'fontsize',nfont)
+
+
+figure(2)
+
+subplot(2,1,1)
+plot(t,Qy,'b','linewidth',nlinha)
+grid on
+axis([0 t(end) min(Qy)-0.2  max(Qy)+0.2])
+set(gca,'fontsize',nfont)
+
+% Define as entradas de texto e ajusta o tamanho da fonte
+hx=xlabel('Tempo (s)');
+hy=ylabel('Perturbação - Saída');
+set(hx,'fontsize',nfont)
+set(hy,'fontsize',nfont)
+
+subplot(2,1,2)
+plot(t,Qu,'b','linewidth',nlinha)
+grid on
+axis([0 t(end) min(Qu)-0.2 max(Qu)+0.2])
+set(gca,'fontsize',nfont)
+
+% Define as entradas de texto e ajusta o tamanho da fonte
+hx=xlabel('Tempo (s)');
+hy=ylabel('Perturbação - Entrada');
+set(hx,'fontsize',nfont)
+set(hy,'fontsize',nfont)
