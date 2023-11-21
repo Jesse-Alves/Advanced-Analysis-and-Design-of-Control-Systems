@@ -28,7 +28,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="123">
   </a>
 
-  <h1 align="center">Analysis and Control Design for Coupled Tanks</h1>
+  <h1 align="center">Advanced Analysis and Design of Control Systems</h1>
 
   <p align="center">
     <a href="https://github.com/Jesse-Alves?tab=repositories"><strong>View all repositories  »</strong></a>
@@ -71,12 +71,21 @@
 ## About The Project
 
 <!--[![Product Name Screen Shot][product-screenshot]](https://example.com) -->
-The coupled tank system is an excellent type of plant to apply and analyze control techniques, including for didactic purposes. Therefore, the present work will present two control techniques for the system: one using differential equations that describe the model and the other using a plant identification method through experimentally obtained data.
+This repository contains six advanced control projects, where the following topics were addressed: 
+* Frequency Response
+* Internal Model Principle
+* Multivariable Control in State Space
+* Non-Linear System Control
+* Sampled Control System
+* Small Gain Theorem and Anti-Windup
+
+The Matlab and Simulink project codes of the six projects are available [here](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Codes) and the two articles explaining with details the project as well as the discussion are available [here](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Articles)
+
 
 
 <p float="left">
-  <img src="images/img1.JPG" width="150" height="300" />
-  <img src="images/img2.jpg" width="500" height="300" />
+  <img src="images/img1.png" width="500" height="450" />
+<!--   <img src="images/img2.jpg" width="500" height="300" /> -->
 </p>
 
 
@@ -100,6 +109,7 @@ The coupled tank system is an excellent type of plant to apply and analyze contr
 * [![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=for-the-badge&logo=mathworks&logoColor=white)](https://www.mathworks.com/)
 * [![Simulink](https://img.shields.io/badge/Simulink-4E148C?style=for-the-badge&logo=MathWorks&logoColor=white)](https://www.mathworks.com/products/simulink.html)
 
+  
 <!-- 
 * [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
@@ -117,7 +127,7 @@ The coupled tank system is an excellent type of plant to apply and analyze contr
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is a control design project, where the mathematical model of coupled tanks are programed in Simulink file and the Controller in .m files. The details of the methodology and programming of the codes are described in the [Article](https://github.com/Jesse-Alves/Analysis-and-Control-Design-for-Coupled-Tanks/blob/main/Paper/Article%20-%20Analysis_and_Control_Design_for_Coupled_Tanks.pdf).
+This repository contains advanced control design projects, where the mathematical model of coupled tanks are programed using Matlab and Simulink tool. The details and discussion about the projects can be found in the two articles written [here](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Articles).
 
 ### Prerequisites
 
@@ -155,9 +165,9 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Once all the files are inside of the same folder, run the code [ModeloLinear.m](https://github.com/Jesse-Alves/Analysis-and-Control-Design-for-Coupled-Tanks/blob/main/ModeloLinear.m) as the mais code. The other files are auxiliar functions. The Coupled Tanks Model can be found in the [simulink file](https://github.com/Jesse-Alves/Analysis-and-Control-Design-for-Coupled-Tanks/blob/main/TanquesAcoplados.slx).
+The codes of the project are available [here](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Codes)
 
-More details about the project can be found in the [report](https://github.com/Jesse-Alves/Analysis-and-Control-Design-for-Coupled-Tanks/blob/main/Paper/Article%20-%20Analysis_and_Control_Design_for_Coupled_Tanks.pdf) attached.
+More details about the project can be found in the [article](https://github.com/Jesse-Alves/Advanced-Analysis-and-Design-of-Control-Systems/tree/main/Articles) attached.
 
 
 
@@ -271,3 +281,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com -->
+
+
+
+
